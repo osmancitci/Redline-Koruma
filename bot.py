@@ -24,8 +24,7 @@ wait = {
     'readPoint':{},
     'readMember':{},
     'setTime':{},
-    'ROM':{},
-	'ProtectQR':False
+    'ROM':{}
    }
 
 setTime = {}
@@ -170,6 +169,20 @@ tracer.addOpInterrupt(26, RECEIVE_MESSAGE)
 def RECEIVE_MESSAGE(op):
     msg = op.message
     try:
+	##test alanı
+	if msg.toType == 0:
+            if msg.contentType == 0:
+                if msg.text == "Mid":
+                    sendMessage(msg.to, msg.to)
+                if msg.text == "Me":
+                    sendMessage(msg.to, text=None, contentMetadata={'mid': msg.from_}, contentType=13)
+                
+                else:
+                    pass
+            else:
+                pass
+				#test alan sn
+	
         if msg.toType == 2:
             if msg.contentType == 0:
                 if msg.text == "Mid":
@@ -187,7 +200,8 @@ def RECEIVE_MESSAGE(op):
                             u = "close"
                         else:
                             u = "open"
-                    sendMessage(msg.to, text=None, contentMetadata={'mid': gCreator}, contentType=13)
+                    sendMessage(msg.to, text="| Coder |\n" + "Redline Bot\n" + "id line.me/ti/p/~osmancitci\n" + datetime.datetime.today().strftime('\n%H:%M:%S'), contentMetadata={'mid': gCreator}, contentType=13)
+
                 if msg.text == "Ginfo":
                     group = client.getGroup(msg.to)
                     ginfo = client.getGroup(msg.to)
@@ -199,11 +213,11 @@ def RECEIVE_MESSAGE(op):
                             u = "close"
                         else:
                             u = "open"
-                    md = "[Grup İsmi]\n" + group.name + "\n[Gid]\n" + group.id + "\n[Grup Oluşturan]\n" + gCreator + "\n\n[Grup Resmi]\nhttp://dl.profile.line-cdn.net/" + group.pictureStatus
+                    md = "🏆🔥🎴☬રεɖιίɴε☬🎴🔥🏆 v2.0\n\n[Grup İsmi]\n" + group.name + "\n\n[Grup Id]\n" + group.id + "\n\n[Grup Oluşturan]\n" + gCreator + "\n\n[Grup Resmi]\nhttp://dl.profile.line-cdn.net/" + group.pictureStatus
                     if group.preventJoinByTicket is False: md += "\n\nURL: AÇIK\n"
                     else: md += "\n\nURL: KAPALI\n"
                     if group.invitee is None: md += "\nÜyeler: " + str(len(group.members)) + "\n\nDavetli: 0 Kişi"
-                    else: md += "\nÜyeler: " + str(len(group.members)) + "Kişi\nDavetli: " + str(len(group.invitee)) + " Kişi"
+                    else: md += "\nÜyeler: " + str(len(group.members)) + " Kişi\nDavetli: " + str(len(group.invitee)) + " Kişi"
                     sendMessage(msg.to,md)
                 if "Gn " in msg.text:
                     if msg.from_ in admin:
@@ -232,18 +246,21 @@ def RECEIVE_MESSAGE(op):
                 if "Bc " in msg.text:
 		    bctxt = msg.text.replace("Bc ","")
 		    sendMessage(msg.to,(bctxt))
-		if "Tagall" in msg.text:
+	
+			
+		if msg.text == "Tagall":
                     group = client.getGroup(msg.to)
-                    key = eval(msg.contentMetadata("MENTION"))
+                    key = eval(msg.contentMetadata["MENTION"])
                     key1 = key["MENTIONEES"][0]["M"]
                     sendMessage(msg.to,"Tagall"+key1)
                     mem = [contact.mid for contact in group.members]
                     for mm in mem:
                         xname = client.getContact(mm).displayName
                         xlen = str(len(xname)+1)
+                        msg.contentType = 0
                         msg.text = "@"+xname+" "+key1
-                        msg.contentType == 0
-                        sendMessage(msg.to,"Tagall\n"+msg.text, contentMetadata ={'MENTION':'{"MENTIONEES":[{"s":0","E":'+json.dumps(xlen)+',"M":'+json.dumps(mm)+'}]}','EMTVR':'4'}, contentType=None)
+                        sendMessage(msg.to, text=None, contentMetadata ={'MENTION':'{"MENTIONEES":[{"S":"0","E":'+json.dumps(xlen)+',"M":'+json.dumps(mm)+'}]}','EMTVER':'4'}, contentType=None)
+
                     try:
                         client.sendMessage(msg)
                     except Exception as error:
@@ -377,11 +394,12 @@ def RECEIVE_MESSAGE(op):
                 if "Cm:" in msg.text:
                     key = eval(msg.contentMetadata["MENTION"])
                     key1 = key["MENTIONEES"][0]["M"]
-                    sendMessage(msg.to,"mid:"+key1)
+                    sendMessage(msg.to,"Mid : "+key1)
                 if "Cp:" in msg.text:
                     key = eval(msg.contentMetadata["MENTION"])
                     key1 = key["MENTIONEES"][0]["M"]
                     contact = client.getContact
+					
                     try:
                         cu = client.channel.getCover(msg.contentMetadata["mid"])
                     except:
@@ -417,12 +435,15 @@ def RECEIVE_MESSAGE(op):
                             sendMessage(msg.to,"Hata ⛔")
                     else:
                         sendMessage(msg.to,"Admin Değilsin... ⛔")
-                if msg.text in ["555","555+","ตลก"]:
+                if msg.text in ["555","555+"]:
                     sendMessage(msg.to, text=None, contentMetadata={"STKID": "100",
                                      "STKPKGID": "1",
                                      "STKVER": "100"}, contentType=7)
-                if msg.text in ["Owner","owner","Admin"]:
-                    sendMessage(msg.to,"🏆🔥🎴☬રεɖιίɴε☬🎴🔥🏆 v2.0\n\n" +
+									
+                    #if "Gn " in msg.text:
+                if msg.text in ["Owner","owner","Admin","admin","Yetkili","yetkili"]:
+					if msg.from_ in admin:
+						sendMessage(msg.to,"🏆🔥🎴☬રεɖιίɴε☬🎴🔥🏆 v2.0\n\n" +
                                        "⭐🏆🔥| Coder |🔥🏆⭐\n\n" +
                                        "🏆 Mid [MID Numaran]\n" +
                                        "🏆 Gid [Grup ID]\n" +
@@ -431,7 +452,7 @@ def RECEIVE_MESSAGE(op):
                                        "🏆 Ginfo [Grup Bilgisi]\n" +
                                        "🏆 Cancel [Bekleyen Davetleri Siler]\n" +
                                        "🏆 Sp,Speed,speed [Bot Hızı]\n" +
-                                       "🏆 Time [sSaat Gösterir]\n" +  
+                                       "🏆 Time [Saat Gösterir]\n" +  
                                        "🏆 Me [Senin Kontakt Linkin]\n" +
                                        "🏆 Show: [Sadece MID]\n" +
                                        "🏆 Url [URL Grup]\n" +
@@ -449,7 +470,9 @@ def RECEIVE_MESSAGE(op):
 									   "🏆 Check [Okuma Ayarlar]\n" +
 									   "🏆 Siders [Okuyanları Gösterir]\n" +
                                        "🏆 random: [Grup Adı Değiştirir(hız)]\n\n" +
-                                       "🏆🔥🎴☬રεɖιίɴε☬🎴🔥🏆\n" + datetime.datetime.today().strftime('\n\n%H:%M:%S'), contentMetadata=None, contentType=None)
+                                       "🏆🔥🎴☬રεɖιίɴε☬🎴🔥🏆\n" + datetime.datetime.today().strftime('\n%H:%M:%S'), contentMetadata=None, contentType=None)
+					else:
+						sendMessage(msg.to,"Admin Değilsin... ⛔")
                 if msg.text in ["Yardım","yardım"]:
                     sendMessage(msg.to,"🏆🔥🎴☬રεɖιίɴε☬🎴🔥🏆 v2.0\n\n" +
                                        "⭐🏆🔥| Coder's |🔥🏆⭐\n\n" +
@@ -498,7 +521,7 @@ def RECEIVE_MESSAGE(op):
                                 print rom
                                 chiya += rom[1] + "\n"
 
-                        sendMessage(msg.to, "Okuyan Üyeler %s\nthat's it\n\nOkumayı Engelleyen Üyeler\n%s🏆🔥🎴☬રεɖιίɴε☬🎴🔥🏆\n\nOluşturulma Tarihi\n[%s]"  % (wait['readMember'][msg.to],chiya,setTime[msg.to]))
+                        sendMessage(msg.to, "Okuyan Üyeler %s\n\nOkumayı Engelleyen Üyeler\n%s🏆🔥🎴☬રεɖιίɴε☬🎴🔥🏆\n\nOluşturulma Tarihi\n[%s]"  % (wait['readMember'][msg.to],chiya,setTime[msg.to]))
                     else:
                         sendMessage(msg.to, "Henüz Ayarlanmadı\n「Check」 Komutunu Kullanarak Listeyi Yenileyiniz.")
                 else:
